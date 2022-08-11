@@ -5,17 +5,18 @@ const bodyParser = require('body-parser');
 const router = require("./routes.js");
 const controller = require("./controllers.js");
 const authChecker = require("./middleware/authChecker.js");
+const cors = require('cors');
+
 
 const app = express();
 
 // app.use(authChecker);
+
 app.use(bodyParser.json())
+app.use(cors());
 app.use('/', router);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function() {
     console.log(`listening on port ${PORT}`);
 })
-
-
-//

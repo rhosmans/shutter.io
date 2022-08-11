@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderColor: "#ccc",
     borderBottomWidth: 1,
-    textColor: '#fff'
   },
   loginText: {
     color: '#ffffff',

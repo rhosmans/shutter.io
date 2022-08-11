@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "shutterio",
+    "slug": "shutterio",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.hosmanSupply.Shutterio"
+    }
+  },
+  "name": "shutterio"
+}

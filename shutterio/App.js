@@ -5,6 +5,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './components/login';
 import Signup from './components/signup';
 import PhotoPrompt from './components/dashboard';
+import Gallery from './components/gallery';
+
 const Stack = createStackNavigator();
 function AppStack() {
   return (
@@ -38,6 +40,14 @@ function AppStack() {
        component={PhotoPrompt} 
        options={
          { title: 'Home' },
+         {headerLeft: null} 
+       }
+      />
+      <Stack.Screen 
+       name="Gallery" 
+       component={Gallery} 
+       options={
+         { title: 'Gallery' },
          {headerLeft: null} 
        }
       />

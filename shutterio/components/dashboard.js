@@ -5,10 +5,13 @@ import {subjects} from '../utils/SubjectDictonary'
 import * as Permissions from "expo-permissions"
 import * as ImagePicker from "expo-image-picker"
 import { AntDesign } from "@expo/vector-icons"
-
-
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
+const cloudName = 'aURL'
+const upload_preset = 'RFC2205MVPReave'
+const cloudinary_url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`
 
 
 
@@ -23,11 +26,18 @@ function PhotoPrompt (props) {
       };
     
     const dailyUrl = "http://localhost:3000/daily";
-    const postPhotoURL = "http://localhost:3000/daily";
+    const postPhotoURL = "http://localhost:3000/photos";
 
     useEffect(() => {
         loggedIn();
     },[props])
+
+    useEffect(() => {
+        console.log(newPhoto);
+        if(newPhoto !== '') {
+            cloudinaryUpload(newPhoto, "Image");
+        }
+    },[newPhoto])
 
 
     loggedIn = () => {
@@ -54,23 +64,42 @@ function PhotoPrompt (props) {
         ImagePicker.launchImageLibraryAsync({})
         .then((success) => {
             setNewPhoto(success.uri);
-            
-            axios.post(postPhotoURL, { headers })
-            .then((response) => {
-                console.log(response.status);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+            // console.log(success);
         })
         .catch((err) => {
             console.log(err);
         })
     }
 
+    navGallery = () => {
+        // console.log("button Press");
+        props.navigation.navigate('Gallery');
+    }
 
-    cloudinaryUpload = (photoURI) => {
 
+    cloudinaryUpload = (photoURI, type) => {
+        const photoFormData = new FormData();
+        let name = "name"
+        let photo = {
+            photoURI,
+            type,
+            name
+        }
+        photoFormData.append("file", photo);
+        photoFormData.append("upload_preset", upload_preset);
+        photoFormData.append("cloud_name", cloudName);
+        fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+        method: "post",
+        body: photoFormData,
+        })
+        .then((res) => res.json())
+        .then((success) => {
+            console.log(success);
+        })
+        .catch((err) => {
+            console.log("An Error Occured While Uploading");
+            console.log(err);
+        });
     }
     
    
@@ -91,6 +120,11 @@ function PhotoPrompt (props) {
                         <Text style={styles.textStyle}>Add your photo!</Text>
                     </View>
                 )}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.navGallery}>
+                <Text 
+                style={styles.promptTextStyle}
+                >See other photos taken today!</Text>
             </TouchableOpacity>
         </View>
         <View style={styles.logoutWrapper}>
@@ -127,10 +161,12 @@ const styles = StyleSheet.create({
   promptTextStyle: {
       color:'#fff',
       fontWeight: '700',
+      textAlign:'center',
+      marginTop: 20
   },
   bodyWrapper: {
       justifyContent: "center",
-      marginBottom: "120%"
+      marginBottom: "50%"
   },
   submitAndView: {
       color:'pink',
@@ -151,9 +187,9 @@ const styles = StyleSheet.create({
   },
   newPhoto: {
     backgroundColor: "#fff",
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
     alignSelf: "center",
     marginTop: 50,
     overflow: 'hidden'
